@@ -1,0 +1,3 @@
+rootProject.name = 'kams'
+include 'kams-authentication'
+
