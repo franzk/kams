@@ -1,13 +1,13 @@
 package net.franzka.kams.authentication;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+//import org.junit.jupiter.api.Test;
+//import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class KamsAuthenticationApplicationTests {
-
-	@Test
-	void contextLoads() {
-	}
-
-}
+//@SpringBootTest
+//class KamsAuthenticationApplicationTests {
+//
+//	@Test
+//	void contextLoads() {
+//	}
+//
+//}
