@@ -2,41 +2,21 @@
 
 KaMS Authentication Service.
 
-## API Endpoints
+------
 
-- **Register**
-  - URL : http://localhost:8085/auth/register
-  - Method : POST
-  - Body Parameter (Json) :
-    - username
-    - password
-  - response (success) : <200, User created (Json)>
-  - response (fail) : <400, ${error.user-already-exists}>
-  - call example : 
-    - curl -X POST http://localhost:8085/register -H "Content-Type: application/json" -d
-      "{\"username\": \"XX\",\"password\": \"XX\"}"
+## Technical
+<img src="https://img.shields.io/badge/-JAVA%2017-00A7BB?style=for-the-badge&logo=java&logoColor=white"> <img src="https://img.shields.io/badge/-SPRING%20BOOT%203.1.0-6eb442?style=for-the-badge&logo=spring&logoColor=white">
+<img src="https://img.shields.io/badge/-SPRING%20WEB-397200?style=for-the-badge&logo=spring&logoColor=white">
+<br> <img src="https://img.shields.io/badge/-SPRING%20DATA%20JPA-8db411?style=for-the-badge&logo=spring&logoColor=white"> <img src="https://img.shields.io/badge/-MYSQL-006189?style=for-the-badge&logo=mysql&logoColor=white">
+<br> <img src="https://img.shields.io/badge/-SPRING%20SECURITY-1a5900?style=for-the-badge&logo=spring&logoColor=white">
 
+<br><img src="https://img.shields.io/badge/-GRADLE-black?style=for-the-badge&logo=gradle&logoColor=white">
+<img src="https://img.shields.io/badge/-JACOCO-810a00?style=for-the-badge">
+<br><img src="https://img.shields.io/badge/-ANGULAR-c41829?style=for-the-badge&logo=angular&logoColor=white">
 
-- **Get Token**
-  - URL : http://localhost:8085/auth/token
-  - Method : POST
-  - Body Parameter (Json) :
-      - username
-      - password
-  - response (success) : <200, the generated token>
-  - response (fail) : <401, ${error.invalid-access}>
-  - ????????? checker les erreurs, genre bad cred
-  - call example :
-      - curl -X POST http://localhost:8085/token -H "Content-Type: application/json" -d
-        "{\"username\": \"XX\",\"password\": \"XX\"}" 
+------
 
+## Documentation
 
-- **Validate**
-  - URL : http://localhost:8085/auth/validate
-  - Method : GET
-  - URL Parameter : token
-  - response (success) : <200, ${token.valid}>
-  - response (fail) : <401, ${error.expired-token}>
-  - ????????????????????????????????????????
-  - call example :
-    - curl -X GET http://localhost:8085/auth/validate?token=eyJhbGciOiJIUzI1NiJ9.e......
+See [documentation](doc).
+
