@@ -5,12 +5,12 @@ import net.franzka.kams.authentication.dto.UserMapper;
 import net.franzka.kams.authentication.exception.UserAlreadyActivatedException;
 import net.franzka.kams.authentication.exception.ActivationTokenExpiredException;
 import net.franzka.kams.authentication.exception.WrongActivationTokenException;
-import net.franzka.kams.authentication.model.UnverifiedUser;
 import net.franzka.kams.authentication.model.User;
+import net.franzka.kams.authentication.service.interfaces.RegistrationService;
 import net.franzka.kams.authentication.utils.GenerateTestData;
 import net.franzka.kams.authentication.dto.UserDto;
-import net.franzka.kams.authentication.exception.UserAlreadyExistException;
-import net.franzka.kams.authentication.service.RegistrationService;
+import net.franzka.kams.authentication.exception.UserAlreadyExistsException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,8 +35,13 @@ class RegistrationControllerTest {
     @Mock
     private UserMapper userMapper;
 
+    @BeforeEach
+    public void setup() {
+        controllerUnderTest.setRegistrationService(registrationService);
+    }
+
     @Test
-    void registerTest() throws UserAlreadyExistException {
+    void registerTest() throws UserAlreadyExistsException {
         // Arrange
         UserDto testDto = GenerateTestData.generateUserDto();
         when(registrationService.register(any())).thenReturn("OK");

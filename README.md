@@ -25,7 +25,7 @@
 - Clone this repository :  
   $ git clone https://github.com/franzk/kams.git
 - Create a MySQL database and adapt config files :
-  - [application.properties](kams-authentication%2Fsrc%2Fmain%2Fresources%2Fapplication.properties)
-  - [application-dev.properties](kams-authentication%2Fsrc%2Fmain%2Fresources%2Fapplication-dev.properties)
-  - [application-test.properties](kams-authentication%2Fsrc%2Fmain%2Fresources%2Fapplication-test.properties)
+  - [kams-authentication/src/main/resources/application.properties](kams-authentication%2Fsrc%2Fmain%2Fresources%2Fapplication.properties)
+  - [kams-authentication/src/main/resources/application-dev.properties](kams-authentication%2Fsrc%2Fmain%2Fresources%2Fapplication-dev.properties)
+  - [kams-authentication/src/main/resources/application-test.properties](kams-authentication%2Fsrc%2Fmain%2Fresources%2Fapplication-test.properties)
 
