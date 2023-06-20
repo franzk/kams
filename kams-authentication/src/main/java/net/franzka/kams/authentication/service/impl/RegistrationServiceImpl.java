@@ -35,6 +35,12 @@ public class RegistrationServiceImpl implements RegistrationService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * New user registration
+     * @param userDto : {@link UserDto} that contains the data of the new user
+     * @return {@link UserDto} that contains the data of the unverified user created
+     * @throws {@link UserAlreadyExistsException}
+     */
     public UserDto register(UserDto userDto) throws UserAlreadyExistsException {
 
         if (userRepository.findByEmail(userDto.getEmail()).isPresent()) throw new UserAlreadyExistsException();
@@ -50,6 +56,11 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     }
 
+    /**
+     * Map {@link UserDto} to {@link UnverifiedUser} and encode password
+     * @param userDto
+     * @return
+     */
     protected UnverifiedUser makeNewUnverifiedUser(UserDto userDto) {
 
         UnverifiedUser newUnverifiedUser = new UnverifiedUser();
@@ -66,6 +77,15 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Value("${net.franzka.kams.authentication.activationtoken-expiration-minutes}")
     private int validationTokenDuration;
 
+    /**
+     * Activate new User. <br>
+     * Copy the {@link UnverifiedUser} found with the activationToken into a new {@link User} and save it.
+     * @param activationToken
+     * @return the created {@link User}
+     * @throws WrongActivationTokenException
+     * @throws UserAlreadyActivatedException
+     * @throws ActivationTokenExpiredException
+     */
     @Transactional
     public User activate(String activationToken) throws WrongActivationTokenException, UserAlreadyActivatedException, ActivationTokenExpiredException {
 

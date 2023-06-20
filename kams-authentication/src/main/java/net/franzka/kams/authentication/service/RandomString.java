@@ -1,14 +1,21 @@
 package net.franzka.kams.authentication.service;
 
-import java.nio.charset.Charset;
 import java.util.Random;
 
+/**
+ * Generate random String
+ */
 public class RandomString {
 
     private RandomString() {
 
     }
 
+    /**
+     * Generates a random String
+     * @param length : length of the expected String
+     * @return a random String
+     */
     public static String generateRandomString(int length) {
         int leftLimit = 48; // numeral '0'
         int rightLimit = 122; // letter 'z'

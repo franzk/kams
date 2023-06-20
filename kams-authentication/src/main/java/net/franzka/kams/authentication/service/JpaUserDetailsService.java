@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 
+/**
+ * retrieve a username, a password, and a role for authenticating with a username and password
+ */
 @Service
 public class JpaUserDetailsService implements UserDetailsService {
 
