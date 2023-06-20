@@ -10,13 +10,22 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+/**
+ * Handle API exceptions
+ */
 @ControllerAdvice
 @PropertySource("classpath:messages.properties")
 public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
-    @Value("${error.activation-link-expired}")
+    @Value("${net.franzka.kams.authentication.error.activation-link-expired}")
     private String activationTokenExpiredErrorMessage;
 
+    /**
+     * ActivationTokenExpiredException
+     * @param ex : {@link ActivationTokenExpiredException}
+     * @param request : {@link WebRequest}
+     * @return Http Status 400 and the related error message stored in messages.properties
+     */
     @ExceptionHandler(ActivationTokenExpiredException.class)
     protected ResponseEntity<Object> handleActivationTokenExpiredException(ActivationTokenExpiredException ex,
                                                                            WebRequest request) {
@@ -26,9 +35,15 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
     }
 
-    @Value("${error.user-already-activated}")
+    @Value("${net.franzka.kams.authentication.error.user-already-activated}")
     private String userAlreadyActivatedErrorMessage;
 
+    /**
+     * UserAlreadyActivatedException
+     * @param ex : {@link UserAlreadyActivatedException}
+     * @param request : {@link WebRequest}
+     * @return Http Status 400 and the related error message stored in messages.properties
+     */
     @ExceptionHandler(UserAlreadyActivatedException.class)
     protected ResponseEntity<Object> handleUserAlreadyActivatedException(UserAlreadyActivatedException ex,
                                                                            WebRequest request) {
@@ -38,9 +53,15 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
     }
 
-    @Value("${error.user-already-exists}")
+    @Value("${net.franzka.kams.authentication.error.user-already-exists}")
     private String userAlreadyExistsErrorMessage;
 
+    /**
+     * UserAlreadyExistsException
+     * @param ex : {@link UserAlreadyExistsException}
+     * @param request : {@link WebRequest}
+     * @return Http Status 400 and the related error message stored in messages.properties
+     */
     @ExceptionHandler(UserAlreadyExistsException.class)
     protected ResponseEntity<Object> handleUserAlreadyExistsException(UserAlreadyExistsException ex,
                                                                          WebRequest request) {
@@ -50,9 +71,15 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
     }
 
-    @Value("${error.wrong-activation-token}")
+    @Value("${net.franzka.kams.authentication.error.wrong-activation-token}")
     private String wrongActivationTokenErrorMessage;
 
+    /**
+     * WrongActivationTokenException
+     * @param ex : {@link WrongActivationTokenException}
+     * @param request : {@link WebRequest}
+     * @return Http Status 400 and the related error message stored in messages.properties
+     */
     @ExceptionHandler(WrongActivationTokenException.class)
     protected ResponseEntity<Object> handleUWrongActivationTokenException(WrongActivationTokenException ex,
                                                                       WebRequest request) {

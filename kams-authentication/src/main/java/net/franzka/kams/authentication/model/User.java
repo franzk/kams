@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Describes an user.
+ */
 @Entity
 @Table(name = "user")
 @Getter

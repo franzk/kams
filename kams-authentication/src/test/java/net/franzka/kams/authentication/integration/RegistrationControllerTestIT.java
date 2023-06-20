@@ -87,11 +87,16 @@ class RegistrationControllerTestIT {
         // verify the response of the endpoint
         MvcResult result = resultActions.andReturn();
         String contentAsString = result.getResponse().getContentAsString();
-        assertThat(contentAsString).isEqualTo("OK"); // TODO améliorer
+        Map<String, Object> resultData = mapper.readValue(contentAsString, new TypeReference<Map<String, Object>>() {});
+        String resultEmail = resultData.get("email").toString();
+        String resultRole = resultData.get("role").toString();
+
+        assertThat(resultEmail).isEqualTo(testDto.getEmail());
+        assertThat(resultRole).isEqualTo(testDto.getRole());
     }
 
 
-    @Value("${error.user-already-exists}")
+    @Value("${net.franzka.kams.authentication.error.user-already-exists}")
     private String userAlreadyExistsErrorMessage;
 
     @Test
@@ -142,15 +147,13 @@ class RegistrationControllerTestIT {
         String contentAsString = result.getResponse().getContentAsString();
         Map<String, Object> resultData = mapper.readValue(contentAsString, new TypeReference<Map<String, Object>>() {});
         String resultEmail = resultData.get("email").toString();
-        String resultPassword = resultData.get("password").toString();
         String resultRole = resultData.get("role").toString();
 
         assertThat(resultEmail).isEqualTo(testUnverifiedUser.getEmail());
-        assertThat(resultPassword).isEqualTo(testUnverifiedUser.getPassword());
         assertThat(resultRole).isEqualTo(testUnverifiedUser.getRole());
     }
 
-    @Value("${error.activation-link-expired}")
+    @Value("${net.franzka.kams.authentication.error.activation-link-expired}")
     private String activationTokenExpiredErrorMessage;
 
     @Test
@@ -171,7 +174,7 @@ class RegistrationControllerTestIT {
     }
 
 
-    @Value("${error.user-already-activated}")
+    @Value("${net.franzka.kams.authentication.error.user-already-activated}")
     private String userAlreadyActivatedErrorMessage;
 
     @Test
@@ -193,7 +196,7 @@ class RegistrationControllerTestIT {
 
     }
 
-    @Value("${error.wrong-activation-token}")
+    @Value("${net.franzka.kams.authentication.error.wrong-activation-token}")
     private String wrongActivationTokenExceptionErrorMessage;
 
     @Test

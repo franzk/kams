@@ -6,6 +6,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+/**
+ * Jpa Repository for {@link UnverifiedUser}
+ */
 @Repository
 public interface UnverifiedUserRepository extends JpaRepository<UnverifiedUser, Integer> {
 

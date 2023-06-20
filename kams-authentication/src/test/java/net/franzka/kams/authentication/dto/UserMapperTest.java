@@ -15,8 +15,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Tag("unitTest")
 class UserMapperTest {
 
-    @InjectMocks
-    private UserMapper userMapper;
 
     @Test
     void userToUserDtoTest() {
@@ -28,11 +26,10 @@ class UserMapperTest {
         testUser.setRole(RandomString.make(64));
 
         // Act
-        UserDto result = userMapper.userToUserDto(testUser);
+        UserDto result = UserMapper.userToUserDto(testUser);
 
         // Assert
         assertThat(result.getEmail()).isEqualTo(testUser.getEmail());
-        assertThat(result.getPassword()).isEqualTo(testUser.getPassword());
         assertThat(result.getRole()).isEqualTo(testUser.getRole());
 
     }
@@ -44,7 +41,7 @@ class UserMapperTest {
         UserDto testDto = GenerateTestData.generateUserDto();
 
         // Act
-        User result = userMapper.userDtoToUser(testDto);
+        User result = UserMapper.userDtoToUser(testDto);
 
         // Assert
         assertThat(result.getEmail()).isEqualTo(testDto.getEmail());

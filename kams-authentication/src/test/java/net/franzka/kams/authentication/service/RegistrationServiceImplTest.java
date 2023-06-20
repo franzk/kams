@@ -7,6 +7,7 @@ import net.franzka.kams.authentication.exception.WrongActivationTokenException;
 import net.franzka.kams.authentication.model.UnverifiedUser;
 import net.franzka.kams.authentication.model.User;
 import net.franzka.kams.authentication.repository.UnverifiedUserRepository;
+import net.franzka.kams.authentication.service.impl.RegistrationServiceImpl;
 import net.franzka.kams.authentication.utils.GenerateTestData;
 import net.franzka.kams.authentication.dto.UserDto;
 import net.franzka.kams.authentication.exception.UserAlreadyExistsException;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -39,10 +41,15 @@ class RegistrationServiceImplTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
     @Test
     void registerTest() throws UserAlreadyExistsException {
         // Arrange
         UserDto testDto = GenerateTestData.generateUserDto();
+        UnverifiedUser testUnverifiedUser = GenerateTestData.generateUnverifiedUser();
+        when(unverifiedUserRepository.save(any())).thenReturn(testUnverifiedUser);
 
         //Act
         serviceUnderTest.register(testDto);

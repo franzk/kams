@@ -7,6 +7,11 @@ import net.franzka.kams.authentication.service.RandomString;
 
 import java.time.LocalDateTime;
 
+/**
+ * Describes an unverified user.                                 <br>
+ * An unverified user is created when a new user registers.     <br>
+ * It contains his email / password / role and an activation token with its creation time.
+ */
 @Entity
 @Table(name="unverified_user")
 @Getter

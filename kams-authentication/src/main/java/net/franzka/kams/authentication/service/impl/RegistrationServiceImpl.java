@@ -1,4 +1,4 @@
-package net.franzka.kams.authentication.service;
+package net.franzka.kams.authentication.service.impl;
 
 import jakarta.transaction.Transactional;
 import net.franzka.kams.authentication.dto.UserDto;
@@ -10,7 +10,8 @@ import net.franzka.kams.authentication.model.UnverifiedUser;
 import net.franzka.kams.authentication.model.User;
 import net.franzka.kams.authentication.repository.UnverifiedUserRepository;
 import net.franzka.kams.authentication.repository.UserRepository;
-import net.franzka.kams.authentication.service.interfaces.RegistrationService;
+import net.franzka.kams.authentication.service.RandomString;
+import net.franzka.kams.authentication.service.RegistrationService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,9 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+/**
+ * Handle new user registration
+ */
 @Service
 public class RegistrationServiceImpl implements RegistrationService {
     private final UnverifiedUserRepository unverifiedUserRepository;
@@ -31,14 +35,18 @@ public class RegistrationServiceImpl implements RegistrationService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public String register(UserDto userDto) throws UserAlreadyExistsException {
+    public UserDto register(UserDto userDto) throws UserAlreadyExistsException {
 
         if (userRepository.findByEmail(userDto.getEmail()).isPresent()) throw new UserAlreadyExistsException();
 
         // save the new unverified user
-        unverifiedUserRepository.save(makeNewUnverifiedUser(userDto));
+        UnverifiedUser unverifiedUser = unverifiedUserRepository.save(makeNewUnverifiedUser(userDto));
 
-        return "OK";
+        // return a DTO with the new unverified user infos
+        UserDto result = new UserDto();
+        result.setEmail(unverifiedUser.getEmail());
+        result.setRole(unverifiedUser.getRole());
+        return result;
 
     }
 
@@ -55,7 +63,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         return newUnverifiedUser;
     }
 
-    @Value("${activationtoken.expiration.minutes}")
+    @Value("${net.franzka.kams.authentication.activationtoken-expiration-minutes}")
     private int validationTokenDuration;
 
     @Transactional
