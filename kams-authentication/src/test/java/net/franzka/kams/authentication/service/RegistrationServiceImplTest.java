@@ -52,10 +52,14 @@ class RegistrationServiceImplTest {
         when(unverifiedUserRepository.save(any())).thenReturn(testUnverifiedUser);
 
         //Act
-        serviceUnderTest.register(testDto);
+        UserDto result = serviceUnderTest.register(testDto);
 
         // Assert
+        assertThat(result).isNotNull();
+        verify(userRepository, times(1)).findByEmail(any());
+        verify(unverifiedUserRepository, times(1)).deleteByEmail(any());
         verify(unverifiedUserRepository, times(1)).save(any());
+
 
     }
 

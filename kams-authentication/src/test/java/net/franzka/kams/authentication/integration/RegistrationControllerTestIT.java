@@ -1,5 +1,6 @@
 package net.franzka.kams.authentication.integration;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.bytebuddy.utility.RandomString;
@@ -76,9 +77,9 @@ class RegistrationControllerTestIT {
 
         // Assert
         // verify that the unverified user is created
-        Optional<UnverifiedUser> optionalNewUnverifiedUser = unverifiedUserRepository.findByEmail(testDto.getEmail());
-        assertThat(optionalNewUnverifiedUser).isPresent();
-        UnverifiedUser newUnverifiedUser = optionalNewUnverifiedUser.get();
+        List<UnverifiedUser> expectedNewUnverifiedUser = unverifiedUserRepository.findByEmail(testDto.getEmail());
+        assertThat(expectedNewUnverifiedUser).hasSize(1);
+        UnverifiedUser newUnverifiedUser = expectedNewUnverifiedUser.get(0);
         assertThat(newUnverifiedUser.getPassword()).isNotEqualTo(testDto.getPassword()); // not equal due to encryption
         assertThat(newUnverifiedUser.getRole()).isEqualTo(testDto.getRole());
         assertThat(newUnverifiedUser.getActivationToken()).isNotEmpty();
@@ -118,6 +119,32 @@ class RegistrationControllerTestIT {
                 .andExpect(content().string(userAlreadyExistsErrorMessage));
     }
 
+
+    @Test
+    @Sql(scripts = "classpath:test.sql")
+    void registrationWithAlreadyExistingUnverifiedUserTestIT() throws Exception {
+        // Arrange
+        String testEmail = RandomString.make(64);
+        for(int i = 0; i < 10; i++) {
+            UnverifiedUser testUnverifiedUser = GenerateTestData.generateUnverifiedUser();
+            testUnverifiedUser.setEmail(testEmail);
+            unverifiedUserRepository.save(testUnverifiedUser);
+        }
+
+        UserDto testDto = GenerateTestData.generateUserDto();
+        testDto.setEmail(testEmail);
+        String body = mapper.writeValueAsString(testDto);
+
+        // Act
+        ResultActions resultActions = mockMvc
+                .perform(post("/register").contentType(APPLICATION_JSON_UTF8).content(body))
+                .andDo(print())
+                .andExpect(status().isCreated());
+
+        // Assert
+        List<UnverifiedUser> expectedUnverifiedUser = unverifiedUserRepository.findByEmail(testEmail);
+        assertThat(expectedUnverifiedUser).hasSize(1);
+    }
 
     @Test
     @Sql(scripts = "classpath:test.sql")

@@ -1,5 +1,6 @@
 package net.franzka.kams.authentication.controller;
 
+import lombok.extern.log4j.Log4j2;
 import net.franzka.kams.authentication.dto.UserDto;
 import net.franzka.kams.authentication.dto.UserMapper;
 import net.franzka.kams.authentication.exception.ActivationTokenExpiredException;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
  * new user registration API
  */
 @RestController
+@Log4j2
 public class RegistrationController {
     private RegistrationService registrationService;
 
@@ -40,13 +42,14 @@ public class RegistrationController {
      */
     @PostMapping("/register")
     public ResponseEntity<UserDto> register(@RequestBody UserDto userDto) throws UserAlreadyExistsException {
+        log.info("New registration. Email : " + userDto.getEmail());
         return new ResponseEntity<>(registrationService.register(userDto), HttpStatus.CREATED);
     }
 
     /**
      * GET Request : activate unverified user.
      * Copy the unverified user infos corresponding to the activationToken to a new user and then delete the unverified user
-     * @param activationToken
+     * @param activationToken : the Activation Token of the unverified user to activate
      * @return Http Status 201 and a {@link UserDto} containing new user infos
      * @throws {@link ActivationTokenExpiredException}
      * @throws {@link WrongActivationTokenException}
@@ -54,7 +57,9 @@ public class RegistrationController {
      */
     @GetMapping("/activate")
     public ResponseEntity<UserDto> activate(@RequestParam String activationToken) throws ActivationTokenExpiredException, WrongActivationTokenException, UserAlreadyActivatedException {
+        log.info("New activation. Activation Token : " + activationToken);
         User userResult = registrationService.activate(activationToken);
+        log.info("New User activated. Email : " + userResult.getEmail());
         return new ResponseEntity<>(UserMapper.userToUserDto(userResult), HttpStatus.CREATED);
     }
 

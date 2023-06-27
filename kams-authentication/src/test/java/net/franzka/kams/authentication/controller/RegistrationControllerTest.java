@@ -6,9 +6,7 @@ import net.franzka.kams.authentication.exception.ActivationTokenExpiredException
 import net.franzka.kams.authentication.exception.UserAlreadyActivatedException;
 import net.franzka.kams.authentication.exception.UserAlreadyExistsException;
 import net.franzka.kams.authentication.exception.WrongActivationTokenException;
-import net.franzka.kams.authentication.model.UnverifiedUser;
 import net.franzka.kams.authentication.model.User;
-import net.franzka.kams.authentication.repository.UnverifiedUserRepository;
 import net.franzka.kams.authentication.service.RegistrationService;
 import net.franzka.kams.authentication.utils.GenerateTestData;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -56,6 +55,17 @@ class RegistrationControllerTest {
     }
 
     @Test
+    void registerWithUserAlreadyExistsExceptionTest() throws UserAlreadyExistsException {
+
+        // Arrange
+        UserDto testDto = GenerateTestData.generateUserDto();
+        when(registrationService.register(any())).thenThrow(UserAlreadyExistsException.class);
+
+        // Act + Assert
+        assertThrows(UserAlreadyExistsException.class, () -> controllerUnderTest.register(testDto));
+    }
+
+    @Test
     void activateTest() throws ActivationTokenExpiredException, WrongActivationTokenException, UserAlreadyActivatedException {
         // Arrange
         String testToken = RandomString.make(64);
@@ -75,6 +85,39 @@ class RegistrationControllerTest {
     }
 
 
+    @Test
+    void activateWithActivationTokenExpiredExceptionTest() throws WrongActivationTokenException, UserAlreadyActivatedException, ActivationTokenExpiredException {
+
+        // Arrange
+        String testToken = RandomString.make(64);
+        when(registrationService.activate(testToken)).thenThrow(ActivationTokenExpiredException.class);
+
+        // Act + Assert
+        assertThrows(ActivationTokenExpiredException.class, () -> controllerUnderTest.activate(testToken));
+    }
+
+    @Test
+    void activateWithWrongActivationTokenExceptionExceptionTest() throws WrongActivationTokenException, UserAlreadyActivatedException, ActivationTokenExpiredException {
+
+        // Arrange
+        String testToken = RandomString.make(64);
+        when(registrationService.activate(testToken)).thenThrow(WrongActivationTokenException.class);
+
+        // Act + Assert
+        assertThrows(WrongActivationTokenException.class, () -> controllerUnderTest.activate(testToken));
+    }
+
+
+    @Test
+    void activateWithUserAlreadyActivatedExceptionTest() throws WrongActivationTokenException, UserAlreadyActivatedException, ActivationTokenExpiredException {
+
+        // Arrange
+        String testToken = RandomString.make(64);
+        when(registrationService.activate(testToken)).thenThrow(UserAlreadyActivatedException.class);
+
+        // Act + Assert
+        assertThrows(UserAlreadyActivatedException.class, () -> controllerUnderTest.activate(testToken));
+    }
 
 
 }

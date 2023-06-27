@@ -1,5 +1,6 @@
 package net.franzka.kams.authentication.exception;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpHeaders;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
  */
 @ControllerAdvice
 @PropertySource("classpath:messages.properties")
+@Log4j2
 public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
     @Value("${net.franzka.kams.authentication.error.activation-link-expired}")
@@ -29,7 +31,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ActivationTokenExpiredException.class)
     protected ResponseEntity<Object> handleActivationTokenExpiredException(ActivationTokenExpiredException ex,
                                                                            WebRequest request) {
-
+        log.error("Activation Token Expired");
         return handleExceptionInternal(ex, activationTokenExpiredErrorMessage, new HttpHeaders(),
                 HttpStatus.BAD_REQUEST, request);
 
@@ -47,7 +49,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     @ExceptionHandler(UserAlreadyActivatedException.class)
     protected ResponseEntity<Object> handleUserAlreadyActivatedException(UserAlreadyActivatedException ex,
                                                                            WebRequest request) {
-
+        log.error("User Already Activated");
         return handleExceptionInternal(ex, userAlreadyActivatedErrorMessage, new HttpHeaders(),
                 HttpStatus.BAD_REQUEST, request);
 
@@ -65,7 +67,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     @ExceptionHandler(UserAlreadyExistsException.class)
     protected ResponseEntity<Object> handleUserAlreadyExistsException(UserAlreadyExistsException ex,
                                                                          WebRequest request) {
-
+        log.error("User Already Exists");
         return handleExceptionInternal(ex, userAlreadyExistsErrorMessage, new HttpHeaders(),
                 HttpStatus.BAD_REQUEST, request);
 
@@ -83,7 +85,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     @ExceptionHandler(WrongActivationTokenException.class)
     protected ResponseEntity<Object> handleUWrongActivationTokenException(WrongActivationTokenException ex,
                                                                       WebRequest request) {
-
+        log.error("Wrong Activation Token");
         return handleExceptionInternal(ex, wrongActivationTokenErrorMessage, new HttpHeaders(),
                 HttpStatus.BAD_REQUEST, request);
 

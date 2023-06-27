@@ -41,9 +41,14 @@ public class RegistrationServiceImpl implements RegistrationService {
      * @return {@link UserDto} that contains the data of the unverified user created
      * @throws {@link UserAlreadyExistsException}
      */
+    @Transactional
     public UserDto register(UserDto userDto) throws UserAlreadyExistsException {
 
+        // if an active user with this email exists in User table, throw an exception
         if (userRepository.findByEmail(userDto.getEmail()).isPresent()) throw new UserAlreadyExistsException();
+
+        // delete the previous inactive registrations with this email in UnverifiedUser table
+        unverifiedUserRepository.deleteByEmail(userDto.getEmail());
 
         // save the new unverified user
         UnverifiedUser unverifiedUser = unverifiedUserRepository.save(makeNewUnverifiedUser(userDto));
@@ -78,9 +83,10 @@ public class RegistrationServiceImpl implements RegistrationService {
     private int validationTokenDuration;
 
     /**
-     * Activate new User. <br>
-     * Copy the {@link UnverifiedUser} found with the activationToken into a new {@link User} and save it.
-     * @param activationToken
+     * Activate new User : <br>
+     * Copy the {@link UnverifiedUser} found with the activationToken into a new {@link User} and save it. <br>
+     * And then delete this {@link UnverifiedUser}
+     * @param activationToken : The activation token of the unverified user to activate
      * @return the created {@link User}
      * @throws WrongActivationTokenException
      * @throws UserAlreadyActivatedException
