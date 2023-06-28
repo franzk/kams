@@ -11,30 +11,33 @@ public class GenerateTestData {
 
     public static User generateUser() {
         User testUser = new User();
-        testUser.setEmail(RandomString.make(64));
-        testUser.setPassword(RandomString.make(64));
+        testUser.setEmail(generateTestEmail());
+        testUser.setPassword("Aa+1" + RandomString.make(64));
         testUser.setRole(RandomString.make(64));
         return testUser;
     }
 
     public static UserDto generateUserDto() {
         UserDto testDto = new UserDto();
-        testDto.setEmail(RandomString.make(64));
-        testDto.setPassword(RandomString.make(64));
+        testDto.setEmail(generateTestEmail());
+        testDto.setPassword("Aa+1" + RandomString.make(64));
         testDto.setRole(RandomString.make(64));
         return testDto;
     }
 
     public static UnverifiedUser generateUnverifiedUser() {
         UnverifiedUser testUnverifiedUser = new UnverifiedUser();
-        testUnverifiedUser.setEmail(RandomString.make(64));
-        testUnverifiedUser.setPassword(RandomString.make(64));
+        testUnverifiedUser.setEmail(generateTestEmail());
+        testUnverifiedUser.setPassword("Aa+1" + RandomString.make(64));
         testUnverifiedUser.setRole(RandomString.make(64));
         testUnverifiedUser.setActivationToken(RandomString.make(64));
         testUnverifiedUser.setCreationTime(LocalDateTime.now());
         return testUnverifiedUser;
     }
 
+    public static String generateTestEmail() {
+        return RandomString.make(20) + "@" + RandomString.make(20) + "." + RandomString.make(3);
+    }
 
 
 }

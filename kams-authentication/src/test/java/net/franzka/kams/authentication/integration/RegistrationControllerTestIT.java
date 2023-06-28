@@ -1,15 +1,14 @@
 package net.franzka.kams.authentication.integration;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.bytebuddy.utility.RandomString;
-import net.franzka.kams.authentication.model.UnverifiedUser;
-import net.franzka.kams.authentication.repository.UnverifiedUserRepository;
-import net.franzka.kams.authentication.utils.GenerateTestData;
 import net.franzka.kams.authentication.dto.UserDto;
+import net.franzka.kams.authentication.model.UnverifiedUser;
 import net.franzka.kams.authentication.model.User;
+import net.franzka.kams.authentication.repository.UnverifiedUserRepository;
 import net.franzka.kams.authentication.repository.UserRepository;
+import net.franzka.kams.authentication.utils.GenerateTestData;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +30,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -60,6 +60,9 @@ class RegistrationControllerTestIT {
     PasswordEncoder passwordEncoder;
 
     ObjectMapper mapper = new ObjectMapper();
+
+
+    // Registration endpoint
 
     @Test
     @Sql(scripts = "classpath:test.sql")
@@ -124,7 +127,7 @@ class RegistrationControllerTestIT {
     @Sql(scripts = "classpath:test.sql")
     void registrationWithAlreadyExistingUnverifiedUserTestIT() throws Exception {
         // Arrange
-        String testEmail = RandomString.make(64);
+        String testEmail = GenerateTestData.generateTestEmail();
         for(int i = 0; i < 10; i++) {
             UnverifiedUser testUnverifiedUser = GenerateTestData.generateUnverifiedUser();
             testUnverifiedUser.setEmail(testEmail);
@@ -145,6 +148,67 @@ class RegistrationControllerTestIT {
         List<UnverifiedUser> expectedUnverifiedUser = unverifiedUserRepository.findByEmail(testEmail);
         assertThat(expectedUnverifiedUser).hasSize(1);
     }
+
+    @Value("${net.franzka.kams.authentication.error.invalid-email-format}")
+    private String invalidEmailFormatErrorMessage;
+
+    @Test
+    @Sql(scripts = "classpath:test.sql")
+    void registrationWithInvalidEmailFormatErrorTestIT() throws Exception {
+
+        // Arrange
+        UserDto testDto = GenerateTestData.generateUserDto();
+        testDto.setEmail("bad email format");
+        String body = mapper.writeValueAsString(testDto);
+
+        // Act
+        ResultActions resultActions = mockMvc
+                .perform(post("/register").contentType(APPLICATION_JSON_UTF8).content(body))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString(invalidEmailFormatErrorMessage)));
+    }
+
+    @Value("${net.franzka.kams.authentication.error.invalid-password-format}")
+    private String invalidPasswordFormatErrorMessage;
+
+    @Test
+    @Sql(scripts = "classpath:test.sql")
+    void registrationWithInvalidPasswordFormatErrorTestIT() throws Exception {
+
+        // Arrange
+        UserDto testDto = GenerateTestData.generateUserDto();
+        testDto.setPassword("bad password format");
+        String body = mapper.writeValueAsString(testDto);
+
+        // Act
+        ResultActions resultActions = mockMvc
+                .perform(post("/register").contentType(APPLICATION_JSON_UTF8).content(body))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString(invalidPasswordFormatErrorMessage)));
+    }
+
+    @Test
+    @Sql(scripts = "classpath:test.sql")
+    void registrationWithInvalidEmailAndPasswordFormatErrorTestIT() throws Exception {
+
+        // Arrange
+        UserDto testDto = GenerateTestData.generateUserDto();
+        testDto.setEmail("bad email format");
+        testDto.setPassword("bad password format");
+        String body = mapper.writeValueAsString(testDto);
+
+        // Act
+        ResultActions resultActions = mockMvc
+                .perform(post("/register").contentType(APPLICATION_JSON_UTF8).content(body))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString(invalidEmailFormatErrorMessage)))
+                .andExpect(content().string(containsString(invalidPasswordFormatErrorMessage)));
+    }
+
+    // Activation endpoint
 
     @Test
     @Sql(scripts = "classpath:test.sql")
@@ -220,7 +284,6 @@ class RegistrationControllerTestIT {
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(userAlreadyActivatedErrorMessage));
-
     }
 
     @Value("${net.franzka.kams.authentication.error.wrong-activation-token}")
@@ -240,6 +303,7 @@ class RegistrationControllerTestIT {
                 .andExpect(content().string(wrongActivationTokenExceptionErrorMessage));
 
     }
+
 
 
 

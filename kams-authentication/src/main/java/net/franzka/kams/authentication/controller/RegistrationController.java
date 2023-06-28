@@ -1,5 +1,6 @@
 package net.franzka.kams.authentication.controller;
 
+import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import net.franzka.kams.authentication.dto.UserDto;
 import net.franzka.kams.authentication.dto.UserMapper;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @Log4j2
+@CrossOrigin
 public class RegistrationController {
     private RegistrationService registrationService;
 
@@ -41,7 +43,7 @@ public class RegistrationController {
      * @throws {@link UserAlreadyExistsException}
      */
     @PostMapping("/register")
-    public ResponseEntity<UserDto> register(@RequestBody UserDto userDto) throws UserAlreadyExistsException {
+    public ResponseEntity<UserDto> register(@RequestBody @Valid UserDto userDto) throws UserAlreadyExistsException {
         log.info("New registration. Email : " + userDto.getEmail());
         return new ResponseEntity<>(registrationService.register(userDto), HttpStatus.CREATED);
     }
