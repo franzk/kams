@@ -8,7 +8,6 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.validation.BindingResult;
@@ -75,7 +74,7 @@ public class ControllerAdvisorTest {
         ReflectionTestUtils.setField(classUnderTest, "wrongActivationTokenErrorMessage", testErrorMessage);
 
         // Act
-        ResponseEntity<Object> result =  classUnderTest.handleUWrongActivationTokenException(new WrongActivationTokenException(), null);
+        ResponseEntity<Object> result =  classUnderTest.handleWrongActivationTokenException(new WrongActivationTokenException(), null);
 
         // Assert
         assertThat(result.getBody()).isEqualTo(testErrorMessage);

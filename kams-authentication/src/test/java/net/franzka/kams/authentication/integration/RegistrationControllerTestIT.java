@@ -71,7 +71,6 @@ class RegistrationControllerTestIT {
         UserDto testDto = GenerateTestData.generateUserDto();
         String body = mapper.writeValueAsString(testDto);
 
-
         // Act
         ResultActions resultActions = mockMvc
                 .perform(post("/register").contentType(APPLICATION_JSON_UTF8).content(body))

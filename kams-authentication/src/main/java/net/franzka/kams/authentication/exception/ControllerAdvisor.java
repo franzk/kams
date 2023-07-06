@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -88,8 +89,8 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
      * @return Http Status 400 and the related error message stored in messages.properties
      */
     @ExceptionHandler(WrongActivationTokenException.class)
-    protected ResponseEntity<Object> handleUWrongActivationTokenException(WrongActivationTokenException ex,
-                                                                      WebRequest request) {
+    protected ResponseEntity<Object> handleWrongActivationTokenException(WrongActivationTokenException ex,
+                                                                         WebRequest request) {
         log.error("Wrong Activation Token");
         return handleExceptionInternal(ex, wrongActivationTokenErrorMessage, new HttpHeaders(),
                 HttpStatus.BAD_REQUEST, request);
@@ -117,5 +118,25 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
             return handleExceptionInternal(ex, errorMessages, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
         }
     }
+
+    @Value("${net.franzka.kams.authentication.error.bad-credentials}")
+    private String badCredentialsErrorMessage;
+
+    /**
+     * BadCredentialsException
+     * @param ex : {@link BadCredentialsException}
+     * @param request : {@link WebRequest}
+     * @return Http Status 401 and the related error message stored in messages.properties
+     */
+    @ExceptionHandler(BadCredentialsException.class)
+    protected ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException ex,
+                                                                          WebRequest request) {
+        log.error("Wrong Activation Token");
+        return handleExceptionInternal(ex, badCredentialsErrorMessage, new HttpHeaders(),
+                HttpStatus.UNAUTHORIZED, request);
+
+    }
+
+
 
 }
