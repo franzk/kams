@@ -79,7 +79,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         return newUnverifiedUser;
     }
 
-    @Value("${net.franzka.kams.authentication.activationtoken-expiration-minutes}")
+    @Value("${net.franzka.kams.authentication.activationtoken-expiration-in-minutes}")
     private int validationTokenDuration;
 
     /**

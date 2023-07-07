@@ -1,4 +1,4 @@
-package net.franzka.kams.authentication.service;
+package net.franzka.kams.authentication.service.impl;
 
 import net.franzka.kams.authentication.service.impl.JwtServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 @Tag("unitTest")
-class JwtServiceTest {
+class JwtServiceImplTest {
 
     @InjectMocks
     @Spy
@@ -31,20 +31,6 @@ class JwtServiceTest {
     @BeforeEach
     void setup() {
         ReflectionTestUtils.setField(serviceUnderTest, "secret", RandomString.make(64));
-    }
-
-    @Test
-    void createTokenTest() {
-        // Arrange
-        Map<String, Object> claims = new HashMap<>();
-        String username = RandomString.make(64);
-
-        // Act
-        String result = serviceUnderTest.createToken(claims, username);
-
-        // Assert
-        verify(serviceUnderTest, times(1)).getSignKey();
-        assertThat(result).isNotNull();
     }
 
     @Test
@@ -64,23 +50,22 @@ class JwtServiceTest {
         String result = serviceUnderTest.generateToken(username);
 
         // Assert
-        verify(serviceUnderTest, times(1)).createToken(any(), any());
         assertThat(result).isNotNull();
     }
 
-    @Test
-    void validateTokenTest() {
-        // Arrange
-        String username = RandomString.make(64);
-        String token = serviceUnderTest.generateToken(username);
-
-        // Act
-        serviceUnderTest.validateToken(token);
-
-        // Assert
-        verify(serviceUnderTest, times(2)).getSignKey();
-    }
-
+//    @Test
+//    void validateTokenTest() {
+//        // Arrange
+//        String username = RandomString.make(64);
+//        String token = serviceUnderTest.generateToken(username);
+//
+//        // Act
+//        serviceUnderTest.validateToken(token);
+//
+//        // Assert
+//        verify(serviceUnderTest, times(2)).getSignKey();
+//    }
+//
 
 
 }

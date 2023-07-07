@@ -7,10 +7,6 @@ import lombok.Setter;
 @Setter
 public class AuthTokenDto {
 
-    public AuthTokenDto(String authToken) {
-        this.authToken = authToken;
-    }
-
     String authToken;
 
 }

@@ -6,4 +6,6 @@ public interface AuthenticationService {
 
     AuthTokenDto generateToken(String email);
 
+    // TODO refresh Token
+
 }

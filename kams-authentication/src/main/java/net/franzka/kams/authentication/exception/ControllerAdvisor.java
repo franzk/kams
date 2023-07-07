@@ -1,5 +1,7 @@
 package net.franzka.kams.authentication.exception;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import io.jsonwebtoken.MalformedJwtException;
 
 import java.util.List;
 
@@ -136,6 +139,42 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
                 HttpStatus.UNAUTHORIZED, request);
 
     }
+
+    @Value("${net.franzka.kams.authentication.error.wrong-auth-token}")
+    private String wrongAuthTokenErrorMessage;
+
+    @ExceptionHandler(MalformedJwtException.class)
+    protected ResponseEntity<Object> handleMalformedJwtException(MalformedJwtException ex,
+                                                                   WebRequest request) {
+        log.error("Wrong AuthToken : MalformedJwtException");
+        return handleExceptionInternal(ex, wrongAuthTokenErrorMessage, new HttpHeaders(),
+                HttpStatus.BAD_REQUEST, request);
+
+    }
+
+    @ExceptionHandler(SignatureException.class)
+    protected ResponseEntity<Object> handleSignatureException(SignatureException ex,
+                                                                 WebRequest request) {
+        log.error("Wrong AuthToken : SignatureException");
+        return handleExceptionInternal(ex, wrongAuthTokenErrorMessage, new HttpHeaders(),
+                HttpStatus.BAD_REQUEST, request);
+
+    }
+
+
+
+    @Value("${net.franzka.kams.authentication.error.auth-token-expired}")
+    private String authTokenExpiredErrorMessage;
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    protected ResponseEntity<Object> handleExpiredJwtException(ExpiredJwtException ex,
+                                                                 WebRequest request) {
+        log.error("AuthToken Expired");
+        return handleExceptionInternal(ex, authTokenExpiredErrorMessage, new HttpHeaders(),
+                HttpStatus.UNAUTHORIZED, request);
+
+    }
+
 
 
 

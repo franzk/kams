@@ -1,8 +1,10 @@
-package net.franzka.kams.authentication.service;
+package net.franzka.kams.authentication.service.impl;
 
 import net.bytebuddy.utility.RandomString;
 import net.franzka.kams.authentication.dto.AuthTokenDto;
+import net.franzka.kams.authentication.service.JwtService;
 import net.franzka.kams.authentication.service.impl.AuthenticationServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,6 +24,11 @@ class AuthenticationServiceImplTest {
 
     @Mock
     JwtService jwtService;
+
+    @BeforeEach
+    private void setup() {
+        serviceUnderTest.setJwtService(jwtService);
+    }
 
     @Test
     void generateTokenTest() {

@@ -1,4 +1,4 @@
-package net.franzka.kams.authentication.service;
+package net.franzka.kams.authentication.service.impl;
 
 import net.bytebuddy.utility.RandomString;
 import net.franzka.kams.authentication.exception.UserAlreadyActivatedException;

@@ -11,17 +11,15 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Log4j2
 @CrossOrigin
+@RequestMapping("/auth")
 public class AuthenticationController {
 
-    private final AuthenticationService authenticationService;
+    private AuthenticationService authenticationService;
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationController(AuthenticationServiceImpl authenticationServiceImpl, AuthenticationManager authenticationManager) {
@@ -29,9 +27,12 @@ public class AuthenticationController {
         this.authenticationManager = authenticationManager;
     }
 
+    public void setAuthenticationService(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
+    }
 
-    @PostMapping("/auth")
-    public ResponseEntity<AuthTokenDto> authenticate(@RequestBody UserDto userDto) throws BadCredentialsException {
+    @PostMapping("/login")
+    public ResponseEntity<AuthTokenDto> login(@RequestBody UserDto userDto) throws BadCredentialsException {
         log.info("Authentication : " + userDto.getEmail());
 
         String username = userDto.getEmail();

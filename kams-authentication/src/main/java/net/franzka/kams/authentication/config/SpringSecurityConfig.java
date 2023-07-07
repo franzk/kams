@@ -32,7 +32,7 @@ public class SpringSecurityConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .userDetailsService(jpaUserDetailsService)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register", "/activate", "/auth", "/auth/token").permitAll()
+                        .requestMatchers("/register", "/activate", "/auth/**").permitAll()
                 )
                 .build();
     }
