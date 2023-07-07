@@ -1,7 +1,6 @@
 package net.franzka.kams.authentication.service.impl;
 
 import net.franzka.kams.authentication.dto.AuthTokenDto;
-import net.franzka.kams.authentication.model.User;
 import net.franzka.kams.authentication.service.AuthenticationService;
 import net.franzka.kams.authentication.service.JwtService;
 import org.springframework.stereotype.Service;

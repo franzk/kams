@@ -1,17 +1,16 @@
 package net.franzka.kams.authentication.service.impl;
 
 import net.bytebuddy.utility.RandomString;
-import net.franzka.kams.authentication.exception.UserAlreadyActivatedException;
+import net.franzka.kams.authentication.dto.UserDto;
 import net.franzka.kams.authentication.exception.ActivationTokenExpiredException;
+import net.franzka.kams.authentication.exception.UserAlreadyActivatedException;
+import net.franzka.kams.authentication.exception.UserAlreadyExistsException;
 import net.franzka.kams.authentication.exception.WrongActivationTokenException;
 import net.franzka.kams.authentication.model.UnverifiedUser;
 import net.franzka.kams.authentication.model.User;
 import net.franzka.kams.authentication.repository.UnverifiedUserRepository;
-import net.franzka.kams.authentication.service.impl.RegistrationServiceImpl;
-import net.franzka.kams.authentication.utils.GenerateTestData;
-import net.franzka.kams.authentication.dto.UserDto;
-import net.franzka.kams.authentication.exception.UserAlreadyExistsException;
 import net.franzka.kams.authentication.repository.UserRepository;
+import net.franzka.kams.authentication.utils.GenerateTestData;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

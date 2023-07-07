@@ -24,7 +24,7 @@ public class UnverifiedUser {
     private Integer id;
 
     private String email;
-    private String password;
+    private String password = RandomString.generateRandomString(64);
     private String role = "USER";
     private String activationToken;
     private LocalDateTime creationTime;
