@@ -134,10 +134,9 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     @ExceptionHandler(BadCredentialsException.class)
     protected ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException ex,
                                                                           WebRequest request) {
-        log.error("Wrong Activation Token");
+        log.error("Bad Credentials");
         return handleExceptionInternal(ex, badCredentialsErrorMessage, new HttpHeaders(),
                 HttpStatus.UNAUTHORIZED, request);
-
     }
 
     @Value("${net.franzka.kams.authentication.error.wrong-auth-token}")
