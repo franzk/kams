@@ -1,4 +1,15 @@
-<header class="col-* border">
-  KaMs
+<header class="col-* border d-flex justify-content-between bd-highlight">
+
+    <div class="p-2 bd-highlight">KaMS</div>
+    <div class="p-2 bd-highlight"></div>
+    <div class="p-2 bd-highlight" *ngIf="authenticationService.isConnected$ | async; else elseTemplate">
+      Connecté
+
+    </div>
+    <ng-template #elseTemplate>
+      déconnecté
+    </ng-template>
+
+
 </header>
 

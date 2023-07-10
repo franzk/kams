@@ -1,8 +1,8 @@
-import { LoginService } from './../../services/login.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EMPTY, catchError, tap } from 'rxjs';
 import { UserDto } from 'src/app/models/user-dto.model';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
 
   loginForm!: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private loginService: LoginService) { }
+  constructor(private formBuilder: FormBuilder, private authenticationService: AuthenticationService) { }
 
   ngOnInit(): void {
     this.initform();
@@ -45,16 +45,11 @@ export class LoginComponent implements OnInit {
     const user: UserDto = {
       ...this.loginForm.value
     }
-    this.loginService.login(user).pipe(
-      tap(() => {
-          console.log('login tap');
+    this.authenticationService.login(user).pipe(
+      tap((dto) => {
+          console.log(dto.authToken);
           this.loading = false;
           this.displayForm = false;
-        }),
-        catchError(err => {
-          console.log('error login');
-          this.error = err.error;
-          return EMPTY;
         })
     ).subscribe();
   }
