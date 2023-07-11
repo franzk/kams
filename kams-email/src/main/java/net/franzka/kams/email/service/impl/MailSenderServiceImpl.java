@@ -50,12 +50,8 @@ public class MailSenderServiceImpl implements MailSenderService {
             mailSender.send(message);
         }
         catch(MailSendException ex) {
-            String aa = Arrays.toString(ex.getMessageExceptions());
-            throw new MailSenderException(aa);
+            throw new MailSenderException(Arrays.toString(ex.getMessageExceptions()));
         }
-
-
-
 
         log.info("Email \"" + emailDto.getSubject() + "\" envoyé à " + emailDto.getToAddress());
 
