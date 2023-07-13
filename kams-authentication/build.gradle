@@ -30,34 +30,36 @@ dependencies {
     implementation group: 'org.passay', name: 'passay', version: '1.6.3'
 }
 
-test {
-    useJUnitPlatform {
-        includeTags("unitTest")
+tasks.named('test') {
+    testLogging {
+        events 'passed', 'skipped', 'failed'
+    }
+    useJUnitPlatform{
+        includeTags('unitTest')
     }
 }
 
-task integrationTest(type: Test) {
-
-    useJUnitPlatform {
-        includeTags("integrationTest")
+tasks.register('integrationTests', Test) {
+    testLogging {
+        events 'passed', 'skipped', 'failed'
     }
+    useJUnitPlatform {
+        includeTags 'integrationTest'
+    }
+    mustRunAfter check
     group 'verification'
 }
 
 jacoco {
-    toolVersion = "0.8.9"
+    toolVersion = '0.8.9'
 }
 
 jacocoTestReport {
     reports {
-        xml.enabled true
-        csv.enabled false
-        html.destination file("${buildDir}/jacocoHtml")
-    }
-    afterEvaluate {
-        classDirectories.setFrom(files(classDirectories.files.collect {
-            fileTree(dir: it, exclude: 'net/franz/kams/authentication/integration/**')
-        }))
+        xml.required = false
+        csv.required = false
+        html.required = true
+        html.destination file('${buildDir}/jacocoHtml')
     }
     dependsOn test // unit tests are required to run before generating the report
 }

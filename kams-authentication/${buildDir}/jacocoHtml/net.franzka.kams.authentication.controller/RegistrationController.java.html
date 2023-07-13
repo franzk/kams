@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RegistrationController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">kams-authentication</a> &gt; <a href="index.source.html" class="el_package">net.franzka.kams.authentication.controller</a> &gt; <span class="el_source">RegistrationController.java</span></div><h1>RegistrationController.java</h1><pre class="source lang-java linenums">package net.franzka.kams.authentication.controller;
+
+import jakarta.validation.Valid;
+import lombok.extern.log4j.Log4j2;
+import net.franzka.kams.authentication.dto.UserDto;
+import net.franzka.kams.authentication.dto.UserMapper;
+import net.franzka.kams.authentication.exception.ActivationTokenExpiredException;
+import net.franzka.kams.authentication.exception.UserAlreadyActivatedException;
+import net.franzka.kams.authentication.exception.UserAlreadyExistsException;
+import net.franzka.kams.authentication.exception.WrongActivationTokenException;
+import net.franzka.kams.authentication.model.UnverifiedUser;
+import net.franzka.kams.authentication.model.User;
+import net.franzka.kams.authentication.repository.UnverifiedUserRepository;
+import net.franzka.kams.authentication.service.RegistrationService;
+import net.franzka.kams.authentication.service.impl.RegistrationServiceImpl;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+/**
+ * new user registration API
+ */
+@RestController
+<span class="fc" id="L24">@Log4j2</span>
+@CrossOrigin
+public class RegistrationController {
+    private RegistrationService registrationService;
+
+<span class="fc" id="L29">    public RegistrationController(RegistrationServiceImpl registrationServiceImpl) {</span>
+<span class="fc" id="L30">        this.registrationService = registrationServiceImpl;</span>
+<span class="fc" id="L31">    }</span>
+
+    public void setRegistrationService(RegistrationService registrationService) {
+<span class="fc" id="L34">        this.registrationService = registrationService;</span>
+<span class="fc" id="L35">    }</span>
+
+
+    /**
+     * POST request : Handle new user registration.
+     * Create a new Unverified User with a random activation token and encrypt the given password
+     * @param {@link UserDto} : Request Body in Json Format
+     * @return Http Status 201 and the email of the Unverified User created
+     * @throws {@link UserAlreadyExistsException}
+     */
+    @PostMapping(&quot;/register&quot;)
+    public ResponseEntity&lt;UserDto&gt; register(@RequestBody @Valid UserDto userDto) throws UserAlreadyExistsException {
+<span class="fc" id="L47">        log.info(&quot;New registration. Email : &quot; + userDto.getEmail());</span>
+<span class="fc" id="L48">        return new ResponseEntity&lt;&gt;(registrationService.register(userDto), HttpStatus.CREATED);</span>
+    }
+
+    /**
+     * GET Request : activate unverified user.
+     * Copy the unverified user infos corresponding to the activationToken to a new user and then delete the unverified user
+     * @param activationToken : the Activation Token of the unverified user to activate
+     * @return Http Status 201 and a {@link UserDto} containing new user infos
+     * @throws {@link ActivationTokenExpiredException}
+     * @throws {@link WrongActivationTokenException}
+     * @throws {@link UserAlreadyActivatedException}
+     */
+    @GetMapping(&quot;/activate&quot;)
+    public ResponseEntity&lt;UserDto&gt; activate(@RequestParam String activationToken) throws ActivationTokenExpiredException, WrongActivationTokenException, UserAlreadyActivatedException {
+<span class="fc" id="L62">        log.info(&quot;New activation. Activation Token : &quot; + activationToken);</span>
+<span class="fc" id="L63">        User userResult = registrationService.activate(activationToken);</span>
+<span class="fc" id="L64">        log.info(&quot;New User activated. Email : &quot; + userResult.getEmail());</span>
+<span class="fc" id="L65">        return new ResponseEntity&lt;&gt;(UserMapper.userToUserDto(userResult), HttpStatus.CREATED);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>

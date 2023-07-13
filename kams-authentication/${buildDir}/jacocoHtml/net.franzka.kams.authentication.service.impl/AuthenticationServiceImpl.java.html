@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AuthenticationServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">kams-authentication</a> &gt; <a href="index.source.html" class="el_package">net.franzka.kams.authentication.service.impl</a> &gt; <span class="el_source">AuthenticationServiceImpl.java</span></div><h1>AuthenticationServiceImpl.java</h1><pre class="source lang-java linenums">package net.franzka.kams.authentication.service.impl;
+
+import net.franzka.kams.authentication.dto.AuthTokenDto;
+import net.franzka.kams.authentication.service.AuthenticationService;
+import net.franzka.kams.authentication.service.JwtService;
+import org.springframework.stereotype.Service;
+
+@Service
+public class AuthenticationServiceImpl  implements AuthenticationService {
+
+    private JwtService jwtService;
+
+<span class="fc" id="L13">    public AuthenticationServiceImpl(JwtServiceImpl jwtServiceImpl) {</span>
+<span class="fc" id="L14">        this.jwtService = jwtServiceImpl;</span>
+<span class="fc" id="L15">    }</span>
+
+    public void setJwtService(JwtService jwtService) {
+<span class="fc" id="L18">        this.jwtService = jwtService;</span>
+<span class="fc" id="L19">    }</span>
+
+    public AuthTokenDto generateToken(String email) {
+<span class="fc" id="L22">        AuthTokenDto result = new AuthTokenDto();</span>
+<span class="fc" id="L23">        result.setAuthToken(jwtService.generateToken(email));</span>
+<span class="fc" id="L24">        return result;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>

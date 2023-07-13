@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JwtServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">kams-authentication</a> &gt; <a href="index.source.html" class="el_package">net.franzka.kams.authentication.service.impl</a> &gt; <span class="el_source">JwtServiceImpl.java</span></div><h1>JwtServiceImpl.java</h1><pre class="source lang-java linenums">package net.franzka.kams.authentication.service.impl;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import net.franzka.kams.authentication.service.JwtService;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.security.Key;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+@Service
+<span class="fc" id="L18">public class JwtServiceImpl implements JwtService {</span>
+
+    @Value(&quot;${net.franzka.kams.authentication.jwt-secret}&quot;)
+    private String secret;
+
+    @Value(&quot;${net.franzka.kams.authentication.jwt.expiration-in-seconds}&quot;)
+    private int jwtExpirationInS;
+
+    @Override
+    public String generateToken(String email) {
+
+<span class="fc" id="L29">        Map&lt;String, Object&gt; claims = new HashMap&lt;&gt;();</span>
+
+<span class="fc" id="L31">        return Jwts.builder()</span>
+<span class="fc" id="L32">                .setClaims(claims)</span>
+<span class="fc" id="L33">                .setSubject(email)</span>
+<span class="fc" id="L34">                .setIssuedAt(new Date(System.currentTimeMillis()))</span>
+<span class="fc" id="L35">                .setExpiration(new Date(System.currentTimeMillis() + (30000L)))</span>
+<span class="fc" id="L36">                .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();</span>
+    }
+
+    protected Key getSignKey() {
+<span class="fc" id="L40">        byte[] keyBytes = Decoders.BASE64.decode(secret);</span>
+<span class="fc" id="L41">        return Keys.hmacShaKeyFor(keyBytes);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>
