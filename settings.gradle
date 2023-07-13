@@ -2,3 +2,5 @@ rootProject.name = 'kams'
 include 'kams-authentication'
 include 'kams-email'
 include 'kams-profile'
+include 'kams-eurekaserver'
+
