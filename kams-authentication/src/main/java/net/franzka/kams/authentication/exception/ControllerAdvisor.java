@@ -174,7 +174,14 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
     }
 
+    @ExceptionHandler(SendMailException.class)
+    protected ResponseEntity<Object> handleSendMailException(SendMailException ex,
+                                                               WebRequest request) {
+        log.error("Error while sending mail : " + ex.getMessage());
+        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(),
+                HttpStatus.INTERNAL_SERVER_ERROR, request);
 
+    }
 
 
 }

@@ -1,15 +1,14 @@
 package net.franzka.kams.authentication.service.impl;
 
 import jakarta.transaction.Transactional;
+import lombok.extern.log4j.Log4j2;
 import net.franzka.kams.authentication.dto.UserDto;
-import net.franzka.kams.authentication.exception.ActivationTokenExpiredException;
-import net.franzka.kams.authentication.exception.UserAlreadyActivatedException;
-import net.franzka.kams.authentication.exception.UserAlreadyExistsException;
-import net.franzka.kams.authentication.exception.WrongActivationTokenException;
+import net.franzka.kams.authentication.exception.*;
 import net.franzka.kams.authentication.model.UnverifiedUser;
 import net.franzka.kams.authentication.model.User;
 import net.franzka.kams.authentication.repository.UnverifiedUserRepository;
 import net.franzka.kams.authentication.repository.UserRepository;
+import net.franzka.kams.authentication.service.SendMailService;
 import net.franzka.kams.authentication.service.RandomString;
 import net.franzka.kams.authentication.service.RegistrationService;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,20 +18,28 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Handle new user registration
  */
 @Service
+@Log4j2
 public class RegistrationServiceImpl implements RegistrationService {
     private final UnverifiedUserRepository unverifiedUserRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final SendMailService sendMailService;
 
-    public RegistrationServiceImpl(UnverifiedUserRepository unverifiedUserRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public RegistrationServiceImpl(UnverifiedUserRepository unverifiedUserRepository,
+                                   UserRepository userRepository,
+                                   PasswordEncoder passwordEncoder,
+                                   SendMailServiceImpl sendMailServiceImpl) {
+
         this.unverifiedUserRepository = unverifiedUserRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.sendMailService = sendMailServiceImpl;
     }
 
     /**
@@ -52,6 +59,13 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         // save the new unverified user
         UnverifiedUser unverifiedUser = unverifiedUserRepository.save(makeNewUnverifiedUser(userDto));
+
+        // send the activation email
+        sendMailService.sendMail(
+                unverifiedUser.getEmail(),
+                "Activer votre compte",
+                "Pour activer votre compte, cliquez sur ce lien : " +
+                        "<a href=\"http://localhost:8090/activate?activationToken=" + unverifiedUser.getActivationToken() + "\">Activer</a>");
 
         // return a DTO with the new unverified user infos
         UserDto result = new UserDto();

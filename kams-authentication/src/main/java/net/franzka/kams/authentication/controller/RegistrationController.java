@@ -4,18 +4,15 @@ import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import net.franzka.kams.authentication.dto.UserDto;
 import net.franzka.kams.authentication.dto.UserMapper;
-import net.franzka.kams.authentication.exception.ActivationTokenExpiredException;
-import net.franzka.kams.authentication.exception.UserAlreadyActivatedException;
-import net.franzka.kams.authentication.exception.UserAlreadyExistsException;
-import net.franzka.kams.authentication.exception.WrongActivationTokenException;
-import net.franzka.kams.authentication.model.UnverifiedUser;
+import net.franzka.kams.authentication.exception.*;
 import net.franzka.kams.authentication.model.User;
-import net.franzka.kams.authentication.repository.UnverifiedUserRepository;
 import net.franzka.kams.authentication.service.RegistrationService;
 import net.franzka.kams.authentication.service.impl.RegistrationServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.concurrent.ExecutionException;
 
 /**
  * new user registration API
@@ -43,7 +40,7 @@ public class RegistrationController {
      * @throws {@link UserAlreadyExistsException}
      */
     @PostMapping("/register")
-    public ResponseEntity<UserDto> register(@RequestBody @Valid UserDto userDto) throws UserAlreadyExistsException {
+    public ResponseEntity<UserDto> register(@RequestBody @Valid UserDto userDto) throws UserAlreadyExistsException, SendMailException, ExecutionException, InterruptedException {
         log.info("New registration. Email : " + userDto.getEmail());
         return new ResponseEntity<>(registrationService.register(userDto), HttpStatus.CREATED);
     }

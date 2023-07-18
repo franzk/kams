@@ -25,9 +25,6 @@ public class SpringSecurityConfigTest {
     @Mock
     HttpSecurity httpSecurity;
 
-    //@Mock
-    //AuthenticationConfiguration mockConfig;
-
     @Test
     void filterChainTest() throws Exception {
 

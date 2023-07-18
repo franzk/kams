@@ -29,7 +29,7 @@ public class MailSenderController {
     @PostMapping("/send")
     public ResponseEntity<String> sendEmail(@RequestBody EmailDto emailDto) throws MailSenderException {
         mailSenderService.sendEmail(emailDto);
-        return new ResponseEntity<>("", HttpStatus.OK);
+        return new ResponseEntity<>("Mail sent to " + emailDto.getToAddress(), HttpStatus.OK);
     }
 
 }

@@ -1,6 +1,7 @@
 package net.franzka.kams.email.service.impl;
 
 import jakarta.mail.MessagingException;
+import jakarta.mail.SendFailedException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.extern.log4j.Log4j2;
 import net.franzka.kams.email.dto.EmailDto;
@@ -36,6 +37,8 @@ public class MailSenderServiceImpl implements MailSenderService {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
 
+        String errorPrecisions = " when sending to " + emailDto.getToAddress();
+
         try {
             helper.setFrom(fromAddress, senderName);
             helper.setTo(emailDto.getToAddress());
@@ -43,17 +46,18 @@ public class MailSenderServiceImpl implements MailSenderService {
             helper.setText(emailDto.getContent(), true);
         }
         catch(Exception ex) {
-            throw new MailSenderException(ex.getMessage());
+            throw new MailSenderException(ex.getMessage() + errorPrecisions);
         }
 
         try {
             mailSender.send(message);
-        }
-        catch(MailSendException ex) {
-            throw new MailSenderException(Arrays.toString(ex.getMessageExceptions()));
+        } catch(MailSendException ex) {
+            throw new MailSenderException(Arrays.toString(ex.getMessageExceptions()) + errorPrecisions);
+        } catch (Exception ex) {
+            throw new MailSenderException(ex.getCause() + " / " + ex.getMessage() + errorPrecisions);
         }
 
-        log.info("Email \"" + emailDto.getSubject() + "\" envoyé à " + emailDto.getToAddress());
+        log.info("Email \"" + emailDto.getSubject() + "\" sent to " + emailDto.getToAddress());
 
     }
 
