@@ -25,8 +25,8 @@ spring:
 #      client:
 #        registration:
 #          github:
-#            clientId: Iv1.3be9265579204a32
-#            clientSecret: daa2307012d2ec048a406a29e9acaa4aea4a9979
+#            clientId: ID
+#            clientSecret: SECRET
 #            redirect-uri: http://localhost:8093/login/oauth2/code/github
 #            scope:
 #              - email
