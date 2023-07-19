@@ -30,17 +30,22 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
             }
 
             String authHeader = request.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
+            String token = "";
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
-                authHeader = authHeader.substring(7);
+                token = authHeader.substring(7);
             }
 
             try {
-                jwtService.validateToken(authHeader);
+                jwtService.validateToken(token);
+                request = exchange.getRequest()
+                        .mutate()
+                        .header("loggedInUserEmail", jwtService.getLoggedUserEmail(token))
+                        .build();
             } catch (Exception e) {
                 throw new RuntimeException(e.getMessage());
             }
 
-            return chain.filter(exchange);
+            return chain.filter(exchange.mutate().request(request).build());
         });
     }
 

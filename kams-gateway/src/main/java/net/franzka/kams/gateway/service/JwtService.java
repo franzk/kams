@@ -1,5 +1,6 @@
 package net.franzka.kams.gateway.service;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import io.jsonwebtoken.Jwts;
 
 import java.security.Key;
+import java.util.function.Function;
 
 @Service
 @Log4j2
@@ -32,6 +34,24 @@ public class JwtService {
     public Key getSignKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public String getLoggedUserEmail(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+
+    private Claims extractAllClaims(String token) {
+        return Jwts
+                .parserBuilder()
+                .setSigningKey(getSignKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
     }
 
 }
