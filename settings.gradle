@@ -3,4 +3,5 @@ include 'kams-authentication'
 include 'kams-email'
 include 'kams-profile'
 include 'kams-eurekaserver'
+include 'kams-gateway'
 

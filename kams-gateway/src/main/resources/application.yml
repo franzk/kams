@@ -1,0 +1,43 @@
+spring:
+  cloud:
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:4200"
+            allowedHeaders: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+
+      routes:
+        - id: profile
+          uri: http://localhost:8092/profile
+          predicates:
+            Path=/profile/**
+          filters:
+            - AuthenticationFilter
+            #TokenRelay=
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          github:
+#            clientId: Iv1.3be9265579204a32
+#            clientSecret: daa2307012d2ec048a406a29e9acaa4aea4a9979
+#            redirect-uri: http://localhost:8093/login/oauth2/code/github
+#            scope:
+#              - email
+#              - profile
+#          gateway:
+#            provider: my-provider
+#            client-id: gateway-client-id
+#            client-secret: my-secret
+#            authorization-grant-type: authorization_code
+#            redirect-uri: "http://backend-gateway-client:8083/login/oauth2/code/{registrationId}"
+#            scope: openid, message.read
+#        provider:
+#          my-provider:
+#            issuer-uri: http://backend-auth:8081

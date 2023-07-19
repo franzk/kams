@@ -1,0 +1,12 @@
+#spring:
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          github:
+#            clientId: Iv1.3be9265579204a32
+#            clientSecret: daa2307012d2ec048a406a29e9acaa4aea4a9979
+#            redirect-uri: http://localhost:8090/auth/aa
+#            scope:
+#              - user:email
+#              - read:user

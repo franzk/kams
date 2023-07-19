@@ -48,4 +48,9 @@ public class AuthenticationController {
         }
     }
 
+//    @GetMapping("/aa")
+//    public ResponseEntity<String> oauth2Login(OAuth2AuthenticationToken authentication) {
+//        return new ResponseEntity<>(authentication.toString(), HttpStatus.OK);
+//    }
+
 }
